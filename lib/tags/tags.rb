@@ -21,6 +21,26 @@ module RubyBBCode
         :html_open => '<span style="text-decoration:line-through;">', :html_close => '</span>',
         :description => 'Strike-through text',
         :example => 'This is [s]wrong[/s] good.'},
+      :left => {
+        :html_open => '<div style="text-align: left;">', :html_close => '</div>',
+        :description => 'Adjust the text to left.',
+        :example => 'This is [left]adjusted to the left side.[/left].'},
+      :right => {
+        :html_open => '<div style="text-align: right;">', :html_close => '</div>',
+        :description => 'Adjust the text to right.',
+        :example => 'This is [right]adjusted to the right side.[/right].'},
+      :justify => {
+        :html_open => '<div style="text-align: justify; text-justify: inter-word;">', :html_close => '</div>',
+        :description => 'Justify the text.',
+        :example => 'This is [justify]justified[/justify].'},
+      :sup => {
+        :html_open => '<sup>', :html_close => '</sup>',
+        :description => 'Turn the text into superscript.',
+        :example => '2[sup]2[/sup]=4'},
+      :sub => {
+        :html_open => '<sub>', :html_close => '</sub>',
+        :description => 'Turn the text into subscript.',
+        :example => 'This text contains [sub]subscript[/sub].'},
       :center => {
         :html_open => '<div style="text-align:center;">', :html_close => '</div>',
         :description => 'Center a text',
@@ -30,6 +50,18 @@ module RubyBBCode
         :description => 'Unordered list',
         :example => '[ul][li]List item[/li][li]Another list item[/li][/ul].',
         :only_allow => [ :li, "*".to_sym ]},
+      :table => {
+        :html_open => '<table>', :html_close => '</table>',
+        :description => 'Creates a new table',
+        :example => ''},
+      :tr => {
+        :html_open => '<tr>', :html_close => '</tr>',
+        :description => 'Creates a new table row',
+        :example => ''},
+      :td => {
+        :html_open => '<td>', :html_close => '</td>',
+        :description => 'Creates a new table element',
+        :example => ''},
       :code => {
         :html_open => '<pre>', :html_close => '</pre>',
         :description => 'Code block with mono-spaced text',
@@ -42,8 +74,7 @@ module RubyBBCode
       :li => {
         :html_open => '<li>', :html_close => '</li>',
         :description => 'List item',
-        :example => '[ul][li]List item[/li][li]Another list item[/li][/ul].',
-        :only_in => [ :ul, :ol ]},
+        :example => '[ul][li]List item[/li][li]Another list item[/li][/ul].'},
       :list => {
         :html_open => '<ul>', :html_close => '</ul>',
         :description => 'Unordered list',
@@ -55,23 +86,29 @@ module RubyBBCode
         :example => '[list][*]List item[*]Another list item[/list].',
         :self_closable => true,
         :only_in => [ :list, :ul, :ol ]},
+      :font => {
+        :html_open => '<span style="font-family: %font%;">', :html_close => '</span>',
+        :description => 'Change the font of the text',
+        :example => '[font=Courier New]This is in Courier New[/size]',
+        :allow_quick_param => true, :allow_between_as_param => false,
+        :quick_param_format => /([a-zA-Z ]+)/,
+        :quick_param_format_description => 'The size parameter \'%param%\' is incorrect, a string is expected',
+        :param_tokens => [{:token => :font}]},
       :img => {
-        :html_open => '<img src="%between%" %width%%height%alt="" />', :html_close => '',
+        :html_open => '<img src="%between%" style="%width%%height%" alt="" />', :html_close => '',
         :description => 'Image',
         :example => '[img]http://www.google.com/intl/en_ALL/images/logo.gif[/img].',
         :only_allow => [],
         :require_between => true,
         :allow_quick_param => true, :allow_between_as_param => false,
         :quick_param_format => /^(\d+)x(\d+)$/,
-        :param_tokens => [{:token => :width, :prefix => 'width="', :postfix => '" ', :optional => true },
-                              { :token => :height,  :prefix => 'height="', :postfix => '" ', :optional => true } ],
+        :param_tokens => [{:token => :width, :prefix => 'width:', :postfix => 'px !important;', :optional => true },
+                          { :token => :height,  :prefix => 'height:', :postfix => 'px !important;', :optional => true } ],
         :quick_param_format_description => 'The image parameters \'%param%\' are incorrect, \'<width>x<height>\' excepted'},
       :url => {
-        :html_open => '<a href="%url%">%between%', :html_close => '</a>',
+        :html_open => '<a href="%url%">', :html_close => '</a>',
         :description => 'Link to another page',
         :example => '[url]http://www.google.com/[/url].',
-        :only_allow => [],
-        :require_between => true,
         :allow_quick_param => true, :allow_between_as_param => true,
         :quick_param_format => /^((((http|https|ftp):\/\/)|\/).+)$/,
         :quick_param_format_description => 'The URL should start with http:// https://, ftp:// or /, instead of \'%param%\'',
@@ -84,10 +121,10 @@ module RubyBBCode
         :quick_param_format => /(.*)/,
         :param_tokens => [{:token => :author, :prefix => '<strong>', :postfix => ' wrote:</strong>', :optional => true}]},
       :size => {
-        :html_open => '<span style="font-size: %size%px;">', :html_close => '</span>',
+        :html_open => '<font size="%size%">', :html_close => '</font>',
         :description => 'Change the size of the text',
         :example => '[size=32]This is 32px[/size]',
-        :allow_quick_param => true, :allow_between_as_param => false,
+        :allow_quick_param => true, :allow_between_as_param => true,
         :quick_param_format => /(\d+)/,
         :quick_param_format_description => 'The size parameter \'%param%\' is incorrect, a number is expected',
         :param_tokens => [{:token => :size}]},
