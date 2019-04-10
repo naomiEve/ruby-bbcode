@@ -1,3 +1,6 @@
+# Some info
+This is a fork intended to parse BBCode outputted by SCEditor better, by adding missing tags from the base (all of them included in the BBCode specs).
+
 # Ruby-BBCode
 
 [![gem version](https://badge.fury.io/rb/ruby-bbcode.svg)](https://badge.fury.io/rb/ruby-bbcode) [![Build Status](https://travis-ci.org/veger/ruby-bbcode.svg?branch=master)](https://travis-ci.org/veger/ruby-bbcode) [![Code Coverage](https://coveralls.io/repos/github/veger/ruby-bbcode/badge.svg?branch=master)](https://coveralls.io/github/veger/ruby-bbcode?branch=master)
